@@ -1,0 +1,49 @@
+{
+  "id": "BUG-001",
+  "channel": "#bug-triage",
+  "server": "RepoRescue Lab",
+  "reported_by": "QA Engineer / Community",
+  "severity": "High",
+  "service": "checkout-service",
+  "endpoint": "POST /checkout",
+  "title": "HTTP 500 Internal Server Error when applying valid promotional code RESCUE20 during checkout",
+  "symptoms": "Customers attempting to checkout with the valid promotional code RESCUE20 receive a generic HTTP 500 Internal Server Error screen. Cart items are not purchased, order ID is not generated, and checkout fails completely.",
+  "reproduction_steps": [
+    "Start the checkout service with `uvicorn app.main:app --port 8000`.",
+    "Send an HTTP POST request to `http://localhost:8000/checkout`.",
+    "Include a valid checkout request payload with customer ID, items, shipping address, payment method, and set `promo_code` to 'RESCUE20'.",
+    "Observe the HTTP response status code and response payload."
+  ],
+  "expected_behavior": "The checkout request should succeed with HTTP 200 OK. The service should apply a 20% discount to the subtotal, calculate sales tax on the discounted subtotal, generate an order ID, and return a confirmed CheckoutResponse.",
+  "actual_behavior": "The checkout request fails with HTTP 500 Internal Server Error. The application raises an unhandled KeyError: 'discount_percent' in `app/service.py` within `apply_discount()` because the dictionary in `ACTIVE_PROMOTIONS` defines the discount under the key 'rate' instead of 'discount_percent'.",
+  "target_test": "tests/test_checkout.py::test_reproduce_bug_001_checkout_with_rescue20_promo",
+  "reproduction_payload": {
+    "customer_id": "cust_demo_001",
+    "items": [
+      {
+        "item_id": "prod_keyboard_01",
+        "name": "Mechanical Gaming Keyboard",
+        "unit_price": 100.0,
+        "quantity": 1
+      },
+      {
+        "item_id": "prod_mouse_02",
+        "name": "Ergonomic Wireless Mouse",
+        "unit_price": 50.0,
+        "quantity": 1
+      }
+    ],
+    "shipping_address": {
+      "street": "123 Hackathon Way",
+      "city": "Austin",
+      "state": "TX",
+      "zip_code": "78701",
+      "country": "US"
+    },
+    "payment_method": {
+      "method_type": "credit_card",
+      "card_last4": "4242"
+    },
+    "promo_code": "RESCUE20"
+  }
+}
