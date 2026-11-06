@@ -61,16 +61,8 @@ def apply_discount(subtotal: float, promo_code: Optional[str]) -> float:
         return round(discount, 2)
 
     elif promo["type"] == "percentage":
-        # =========================================================================
-        # SEEDED BUG (BUG-001):
-        # ACTIVE_PROMOTIONS defines percentage discounts using the key 'rate' (e.g. 0.20).
-        # However, the line below incorrectly attempts to access 'discount_percent',
-        # raising an uncaught KeyError: 'discount_percent'.
-        # In FastAPI, this unhandled exception triggers an HTTP 500 Internal Server Error.
-        # DO NOT FIX DURING INITIAL SCAFFOLDING.
-        # =========================================================================
-        percentage_rate = promo["discount_percent"] / 100.0  # <-- Bug triggers here!
-        discount = subtotal * percentage_rate
+        rate = promo["rate"]
+        discount = subtotal * rate
         return round(discount, 2)
 
     return 0.0
@@ -108,3 +100,4 @@ def process_checkout(request: CheckoutRequest) -> CheckoutResponse:
         item_count=total_items,
         message=f"Order {order_id} placed successfully."
     )
+
