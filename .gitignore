@@ -48,3 +48,8 @@ htmlcov/
 *.pem
 *.key
 *.secret
+
+# Patches generated during agent review
+patches/*.patch
+!patches/.gitkeep
+

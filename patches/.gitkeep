@@ -1,0 +1,2 @@
+# Keep patches directory tracked in git while patches/*.patch are untracked
+
