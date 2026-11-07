@@ -1,0 +1,52 @@
+{
+  "id": "BUG-002",
+  "channel": "#bug-triage",
+  "server": "RepoRescue Lab",
+  "reported_by": "QA Engineer / Customer Support",
+  "severity": "Medium",
+  "service": "checkout-service",
+  "endpoint": "POST /checkout",
+  "title": "Pre-discount subtotal incorrectly used for sales tax calculation when applying fixed promotional codes (SAVE10), overcharging customer tax",
+  "symptoms": "Customers applying promotional discounts like SAVE10 are being overcharged on sales tax. Sales tax is being assessed on the pre-discount order subtotal ($150.00 * 8% = $12.00) rather than the net taxable amount ($140.00 * 8% = $11.20).",
+  "reproduction_steps": [
+    "Start the checkout service with `uvicorn app.main:app --port 8000`.",
+    "Send an HTTP POST request to `http://localhost:8000/checkout`.",
+    "Include a valid checkout request payload with $150.00 subtotal and `promo_code` set to 'SAVE10'.",
+    "Inspect the returned `tax_amount` and `total_amount`."
+  ],
+  "expected_behavior": "The checkout service should apply the $10.00 fixed discount to reduce the taxable amount to $140.00. Standard 8% sales tax should be $11.20, and the total order amount should be $151.20.",
+  "actual_behavior": "In `app/service.py` within `process_checkout()`, `taxable_amount` is set to `subtotal` instead of `max(0.0, subtotal - discount)`. As a result, sales tax is calculated as $12.00 instead of $11.20, overcharging the customer by $0.80.",
+  "suspect_files": [
+    "app/service.py"
+  ],
+  "target_test": "tests/test_checkout.py::test_checkout_with_valid_fixed_discount_promo",
+  "reproduction_payload": {
+    "customer_id": "cust_demo_002",
+    "items": [
+      {
+        "item_id": "prod_keyboard_01",
+        "name": "Mechanical Gaming Keyboard",
+        "unit_price": 100.0,
+        "quantity": 1
+      },
+      {
+        "item_id": "prod_mouse_02",
+        "name": "Ergonomic Wireless Mouse",
+        "unit_price": 50.0,
+        "quantity": 1
+      }
+    ],
+    "shipping_address": {
+      "street": "123 Hackathon Way",
+      "city": "Austin",
+      "state": "TX",
+      "zip_code": "78701",
+      "country": "US"
+    },
+    "payment_method": {
+      "method_type": "credit_card",
+      "card_last4": "4242"
+    },
+    "promo_code": "SAVE10"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "bug_id": "BUG-002",
+  "stage": "TRIAGED",
+  "title": "Pre-discount subtotal incorrectly used for sales tax calculation when applying fixed promotional codes (SAVE10), overcharging customer tax",
+  "severity": "Medium",
+  "endpoint": "POST /checkout",
+  "target_test": "tests/test_checkout.py::test_checkout_with_valid_fixed_discount_promo",
+  "suspect_files": [
+    "app/service.py"
+  ],
+  "reproduction": {
+    "exit_code": 1,
+    "reproduced": true,
+    "assertion": "FAILED tests/test_checkout.py::test_checkout_with_valid_fixed_discount_promo",
+    "duration_seconds": 0.84,
+    "timestamp": "2026-11-06T15:03:36.000000+00:00",
+    "verified_channel": "Local CLI rehearsal"
+  },
+  "patch": {
+    "file": "patches/BUG-002.patch",
+    "sha256": "7769b3349c7d",
+    "tests_passed": true,
+    "timestamp": "2026-11-06T15:04:12.000000+00:00",
+    "verified_channel": "Local CLI rehearsal"
+  },
+  "review": {
+    "verdict": "PASS",
+    "tests_passed": true,
+    "unauthorized_files": [],
+    "timestamp": "2026-11-06T15:04:51.000000+00:00",
+    "verified_channel": "Local CLI rehearsal"
+  },
+  "approval_status": "REHEARSED_ONLY",
+  "decision": {
+    "action": "SIMULATED_APPROVE",
+    "actor": "cli-rehearsal",
+    "genuine_human_approval": false,
+    "notes": "Simulated approval executed during local CLI rehearsal. Not a genuine human maintainer production sign-off.",
+    "timestamp": "2026-11-06T15:05:03.000000+00:00"
+  },
+  "history": [
+    {
+      "timestamp": "2026-11-06T15:03:09.000000+00:00",
+      "agent": "repo-rescue",
+      "action": "validate-report",
+      "details": "Validated BUG-002 from fixture (Pre-discount tax overcharge on SAVE10)"
+    },
+    {
+      "timestamp": "2026-11-06T15:03:36.000000+00:00",
+      "agent": "repo-rescue-reproducer",
+      "action": "verify-reproduction",
+      "details": "Failure reproduced: FAILED tests/test_checkout.py::test_checkout_with_valid_fixed_discount_promo (assert 12.0 == 11.20)"
+    },
+    {
+      "timestamp": "2026-11-06T15:04:12.000000+00:00",
+      "agent": "repo-rescue-fixer",
+      "action": "stage-patch",
+      "details": "Created patches/BUG-002.patch (taxable_amount = max(0.0, subtotal - discount), tests_passed=True)"
+    },
+    {
+      "timestamp": "2026-11-06T15:04:51.000000+00:00",
+      "agent": "repo-rescue-reviewer",
+      "action": "audit-patch",
+      "details": "Audit verdict: PASS (minimal diff, no unauthorized changes)"
+    },
+    {
+      "timestamp": "2026-11-06T15:05:03.000000+00:00",
+      "agent": "repo-rescue",
+      "action": "record-decision",
+      "details": "Local CLI rehearsal: simulated approval executed for workflow testing (NOT a genuine human production sign-off)",
+      "rehearsal": true
+    },
+    {
+      "timestamp": "2026-11-07T06:22:01.885529+00:00",
+      "agent": "repo-rescue",
+      "action": "validate-report",
+      "details": "Validated BUG-002 from fixture"
+    }
+  ]
+}

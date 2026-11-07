@@ -53,3 +53,5 @@ htmlcov/
 patches/*.patch
 !patches/.gitkeep
 
+# Temporary report files
+reports/*.tmp

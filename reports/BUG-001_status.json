@@ -1,0 +1,77 @@
+{
+  "bug_id": "BUG-001",
+  "stage": "REVIEWED_PASS",
+  "title": "HTTP 500 Internal Server Error when applying valid promotional code RESCUE20 during checkout",
+  "severity": "High",
+  "endpoint": "POST /checkout",
+  "target_test": "tests/test_checkout.py::test_reproduce_bug_001_checkout_with_rescue20_promo",
+  "suspect_files": [
+    "app/service.py"
+  ],
+  "reproduction": {
+    "exit_code": 1,
+    "reproduced": true,
+    "assertion": "KeyError: 'discount_percent'",
+    "duration_seconds": 1.12,
+    "timestamp": "2026-11-06T13:18:22.000000+00:00",
+    "verified_channel": "Discord #bug-triage (RepoRescue Lab)",
+    "evidence": "docs/screenshots/discord_handoff_1.png"
+  },
+  "patch": {
+    "file": "patches/BUG-001.patch",
+    "sha256": "cd9e7d40d12c",
+    "tests_passed": true,
+    "timestamp": "2026-11-06T13:19:45.000000+00:00",
+    "verified_channel": "Discord #bug-triage (RepoRescue Lab)",
+    "evidence": "docs/screenshots/discord_handoff_2.png"
+  },
+  "review": {
+    "verdict": "PASS",
+    "tests_passed": true,
+    "unauthorized_files": [],
+    "timestamp": "2026-11-06T13:21:10.000000+00:00",
+    "verified_channel": "Discord #bug-triage (RepoRescue Lab)",
+    "evidence": "docs/screenshots/discord_handoff_2.png"
+  },
+  "approval_status": "AWAITING_APPROVAL",
+  "decision": {
+    "action": "PENDING",
+    "actor": null,
+    "genuine_human_approval": false,
+    "notes": "Awaiting human maintainer sign-off in Discord #bug-triage (!approve BUG-001). Pre-approval review audit passed with verdict PASS.",
+    "timestamp": null
+  },
+  "history": [
+    {
+      "timestamp": "2026-11-06T13:17:30.000000+00:00",
+      "agent": "repo-rescue",
+      "action": "validate-report",
+      "details": "Validated BUG-001 from fixture (HTTP 500 on percentage promo RESCUE20)"
+    },
+    {
+      "timestamp": "2026-11-06T13:18:22.000000+00:00",
+      "agent": "repo-rescue-reproducer",
+      "action": "verify-reproduction",
+      "details": "Failure reproduced: KeyError: 'discount_percent' in app/service.py:64 (verified in Discord #bug-triage)"
+    },
+    {
+      "timestamp": "2026-11-06T13:19:45.000000+00:00",
+      "agent": "repo-rescue-fixer",
+      "action": "stage-patch",
+      "details": "Created patches/BUG-001.patch (rate = promo['rate'], 13/13 tests passed, verified in Discord #bug-triage)"
+    },
+    {
+      "timestamp": "2026-11-06T13:21:10.000000+00:00",
+      "agent": "repo-rescue-reviewer",
+      "action": "audit-patch",
+      "details": "Audit verdict: PASS (13/13 tests green, no extra modified files, verified in Discord #bug-triage; prompted developer for !approve)"
+    },
+    {
+      "timestamp": "2026-11-06T15:57:32.681723+00:00",
+      "agent": "repo-rescue",
+      "action": "record-decision",
+      "details": "Local CLI rehearsal decision: simulated approval recorded during test run; live status remains AWAITING_APPROVAL per Discord evidence",
+      "rehearsal": true
+    }
+  ]
+}
